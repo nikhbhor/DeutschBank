@@ -19,10 +19,10 @@ public class ValidateTradeImpl implements ValidateTrade {
 	}
 
 	@Override
-	public Boolean validateVersion(int currentMax, int version) throws Exception {
+	public Boolean validateVersion(String tradeId, int version) throws Exception {
 		
-		if(currentMax==0 || currentMax<=version)
-			DeutscheServiceImpl.currentMax = version;
+		if(!DeutscheServiceImpl.tradeMax.containsKey(tradeId) || DeutscheServiceImpl.tradeMax.get(tradeId)<=version)
+			DeutscheServiceImpl.tradeMax.put(tradeId, version);
 		else{
 			throw new Exception();
 		}

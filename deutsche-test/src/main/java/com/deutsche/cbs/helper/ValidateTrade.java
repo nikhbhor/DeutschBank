@@ -6,6 +6,6 @@ public interface ValidateTrade {
 
 	Boolean validateDate(Date matDate, Date todaysDate);
 
-	Boolean validateVersion(int currentMax, int version) throws Exception;
+	Boolean validateVersion(String string, int version) throws Exception;
 
 }

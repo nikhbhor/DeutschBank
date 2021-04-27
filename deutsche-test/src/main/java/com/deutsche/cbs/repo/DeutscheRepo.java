@@ -1,5 +1,6 @@
 package com.deutsche.cbs.repo;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,14 @@ public class DeutscheRepo {
 		
 		return "Successfully Added : "+trade.toString();
 		
+	}
+
+	public List<Trade> getAllTrades() {
+		List<Trade> list = new ArrayList<>();
+		for(String key : tradeMap.keySet()) {
+			list.add(tradeMap.get(key));
+		}
+		return list;
 	}
 	
 	

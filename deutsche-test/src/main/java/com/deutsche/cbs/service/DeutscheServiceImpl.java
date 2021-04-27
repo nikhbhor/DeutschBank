@@ -1,8 +1,11 @@
 package com.deutsche.cbs.service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +26,12 @@ public class DeutscheServiceImpl implements DeutscheService {
 	@Autowired
 	DeutscheRepo deutscheRepo;
 	
-	Date todaysDate = new Date("20/05/2020");
+	Calendar cal= Calendar.getInstance();
 	
-	public static int currentMax = 0;
+	Date todaysDate = cal.getTime();
+	
+	//public static int currentMax = 0;
+	public static Map<String, Integer> tradeMax = new HashMap<>();
 	
 	private static final Logger logger = LoggerFactory.getLogger(DeutscheServiceImpl.class);
 	
@@ -38,7 +44,7 @@ public class DeutscheServiceImpl implements DeutscheService {
 				return "Maturity Date is less than todays Date";
 			}
 			
-			validateTrade.validateVersion(currentMax, trade.getVersion());
+			validateTrade.validateVersion(trade.getTradeId(), trade.getVersion());
 			
 			return deutscheRepo.addTrade(trade);
 		}catch(Exception e){
@@ -46,6 +52,12 @@ public class DeutscheServiceImpl implements DeutscheService {
 			return "lower version Trade. Trade Rejected.";
 		}
 
+	}
+
+	@Override
+	public List<Trade> getAllTrades() {
+		List<Trade> list = deutscheRepo.getAllTrades();
+		return list;
 	}
 
 }
