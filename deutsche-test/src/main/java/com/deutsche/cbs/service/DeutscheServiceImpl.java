@@ -1,5 +1,7 @@
 package com.deutsche.cbs.service;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -28,9 +30,10 @@ public class DeutscheServiceImpl implements DeutscheService {
 	
 	Calendar cal= Calendar.getInstance();
 	
-	Date todaysDate = cal.getTime();
+	SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 	
-	//public static int currentMax = 0;
+	String todaysDate = formatter.format(cal.getTime());
+	
 	public static Map<String, Integer> tradeMax = new HashMap<>();
 	
 	private static final Logger logger = LoggerFactory.getLogger(DeutscheServiceImpl.class);
@@ -40,7 +43,7 @@ public class DeutscheServiceImpl implements DeutscheService {
 		try{
 			Date matDate = new Date(trade.getMaturityDate());
 			
-			if(!validateTrade.validateDate(matDate, todaysDate)) {
+			if(!validateTrade.validateDate(matDate, formatter.parse(todaysDate))) {
 				return "Maturity Date is less than todays Date";
 			}
 			

@@ -2,6 +2,8 @@ package com.deutsche.cbs.test;
 
 import static org.junit.Assert.assertEquals;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.junit.Assert;
@@ -39,15 +41,19 @@ public class DeutscheServiceImplTest {
 	
 	@Test
 	public void addTradeTestPositive() {
-		String todaysDate = "20/05/2020";
-		String matDate = "20/06/2020";
+		Calendar cal= Calendar.getInstance();
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		
+		String todaysDate = formatter.format(cal.getTime());
+		Date matDate = new Date("2021/07/20");
 		
 		try {
-			Mockito.when(validateTrade.validateDate(new Date(matDate), new Date(todaysDate))).thenReturn(true);
+			Mockito.when(validateTrade.validateDate(matDate, formatter.parse(todaysDate))).thenReturn(true);
 		
-			Mockito.when(validateTrade.validateVersion(0, 4)).thenReturn(true);
+			Mockito.when(validateTrade.validateVersion("T1", 4)).thenReturn(true);
 			
-			Trade trade = new Trade("T1", 1, "C1", "B1", matDate, todaysDate, "N");
+			Trade trade = new Trade("T1", 1, "C1", "B1", "2021/07/20", todaysDate.toString(), "N");
 			
 			Mockito.when(deutscheRepo.addTrade(trade)).thenReturn("Successfully Added : "+trade.toString());
 			String actual = sut.addTrade(trade);
@@ -60,13 +66,17 @@ public class DeutscheServiceImplTest {
 	
 	@Test
 	public void addTradeTestNegative1() {
-		String todaysDate = "20/05/2020";
-		String matDate = "20/04/2020";
+		Calendar cal = Calendar.getInstance();
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		
+		String todaysDate = formatter.format(cal.getTime());
+		Date matDate = new Date("2020/07/20");
 		
 		try {
-			Mockito.when(validateTrade.validateDate(new Date(matDate), new Date(todaysDate))).thenReturn(false);
+			Mockito.when(validateTrade.validateDate(matDate, formatter.parse(todaysDate))).thenReturn(false);
 		
-			Trade trade = new Trade("T1", 1, "C1", "B1", matDate, todaysDate, "N");
+			Trade trade = new Trade("T1", 1, "C1", "B1", "2020/07/20", "2021/04/20", "N");
 			
 			String actual = sut.addTrade(trade);
 			
@@ -78,17 +88,19 @@ public class DeutscheServiceImplTest {
 	
 	@Test
 	public void addTradeTestNegative2() {
-		String todaysDate = "20/05/2020";
-		String matDate = "20/06/2020";
+		Calendar cal = Calendar.getInstance();
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		
+		String todaysDate = formatter.format(cal.getTime());
+		Date matDate = new Date("2021/07/20");
 		
 		try {
-			Mockito.when(validateTrade.validateDate(new Date(matDate), new Date(todaysDate))).thenReturn(true);
+			Mockito.when(validateTrade.validateDate(matDate, formatter.parse(todaysDate))).thenReturn(true);
 			
-			Mockito.when(validateTrade.validateVersion(3, 2)).thenThrow(new Exception());
+			Mockito.when(validateTrade.validateVersion("T1", 1)).thenThrow(new Exception());
 		
-			Trade trade = new Trade("T1", 1, "C1", "B1", matDate, todaysDate, "N");
-			
-			sut.currentMax = 3;
+			Trade trade = new Trade("T1", 1, "C1", "B1", "2021/07/20", "2021/04/20", "N");
 			
 			String actual = sut.addTrade(trade);
 			
